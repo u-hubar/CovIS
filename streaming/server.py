@@ -43,9 +43,13 @@ class StreamServer:
                 self.last_active[cam_name] = datetime.now()
 
             frame = imutils.resize(frame, width=400)
+            frame = cv2.flip(frame, 1)
             (h, w) = frame.shape[:2]
             blob = cv2.dnn.blobFromImage(
-                cv2.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5
+                cv2.resize(frame, (300, 300)),
+                1.0,
+                (300, 300),
+                (104.0, 177.0, 123.0),
             )
 
             self.model.setInput(blob)
@@ -55,9 +59,13 @@ class StreamServer:
                 confidence = detections[0, 0, i, 2]
                 if confidence > self.conf_threshold:
                     box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                    (startX, startY, endX, endY) = box.astype("int")
+                    (start_x, start_y, end_x, end_y) = box.astype("int")
                     cv2.rectangle(
-                        frame, (startX, startY), (endX, endY), (255, 0, 0), 2
+                        frame,
+                        (start_x, start_y),
+                        (end_x, end_y),
+                        (255, 0, 0),
+                        2,
                     )
 
             cv2.putText(
@@ -78,7 +86,7 @@ class StreamServer:
             )
 
             for i, montage in enumerate(montages):
-                cv2.imshow(f"CovIS Camera ({i})", montage)
+                cv2.imshow("CovIS", montage)
 
             key = cv2.waitKey(1) & 0xFF
 
