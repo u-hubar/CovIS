@@ -1,5 +1,5 @@
 import logging
-import textwrap
+import sys
 
 import psycopg2
 import psycopg2.extras
@@ -7,6 +7,7 @@ import psycopg2.extras
 import database.utils.config as config
 from database.utils.decorators import use_cursor
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS-Database")
 
 
