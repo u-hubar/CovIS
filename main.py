@@ -1,24 +1,14 @@
 import sys
 
 import cv2
-import imagezmq
-import threading
-
-from queue import Queue
-
-# from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
-# from PyQt5.QtGui import QImage, Qt, QPixmap
-# from PyQt5.QtCore import *
-
+from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-
-from imutils.video import VideoStream
 
 from mainWindow import Ui_MainWindow
-
+from streaming.client import StreamClient
 from streaming.server import StreamServer
+
 
 # queue = Queue()
 # FRAME_DICT = None
@@ -46,49 +36,63 @@ class MainWindow(QMainWindow):
         # self.thread2.start()
         # self.thread2.image_update.connect(self.image_update_slot)
 
+        self.ui.pushButton_1.clicked.connect(self.push_button_1_clicked)
+
+    def push_button_1_clicked(self):
+        client = StreamClient("localhost")
+        client.stream()
+
     # def image_update_slot(self, image):
 
     def image_update_slot(self, frame_dict):
-        # print(list(frame_dict.values())[0].shape)
-        # print(type((frame_dict.values())[0]))
-        print(frame_dict)
-        print(type(frame_dict))
+        frame_dict_list = list(frame_dict.values())
+        image_list = []
 
-        # # print(image)
-        # print('test_image_update_slot')
-        # # print(frame_dict)
-        # # print(class(frame_dict[0]))
-        # frame_dict_0 = list(frame_dict.values())[0]
-        # image = cv2.cvtColor(frame_dict_0, cv2.COLOR_BGR2RGB)
-        # # flipped_image = cv2.flip(image, 1)
-        # # convert_to_qt_format = QImage(flipped_image.data, flipped_image.shape[1], flipped_image.shape[0],
-        # #                               QImage.Format_RGB888)
-        # # image = convert_to_qt_format.scaled(640, 480)
-        #
-        # convert_to_qt_format = QImage(image.data, image.shape[1], image.shape[0],
-        #                               QImage.Format_RGB888)
-        # # image = convert_to_qt_format.scaled(640, 480)
-        #
-        print('test_image_update_slot_2')
+        for frame in frame_dict_list:
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            convert_to_qt_format = QImage(image.data, image.shape[1], image.shape[0], QImage.Format_RGB888)
+            image = convert_to_qt_format.scaled(640, 480)
+            image_list.append(image)
 
-        frame = list(frame_dict.values())[0]
+        # frame = list(frame_dict.values())[0]
+        # image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # convert_to_qt_format = QImage(image.data, image.shape[1], image.shape[0], QImage.Format_RGB888)
+        # image = convert_to_qt_format.scaled(640, 480)
 
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # flipped_image = cv2.flip(image, 1)
-        convert_to_qt_format = QImage(image.data, image.shape[1], image.shape[0],
-                                      QImage.Format_RGB888)
-        image = convert_to_qt_format.scaled(640, 480)
+        label_list = [self.ui.label_1, self.ui.label_2, self.ui.label_3,
+                      self.ui.label_4, self.ui.label_5, self.ui.label_6,
+                      self.ui.label_7, self.ui.label_8, self.ui.label_9]
 
-        self.ui.label_1.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_2.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_3.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_4.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_5.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_6.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_7.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_8.setPixmap(QPixmap.fromImage(image))
-        self.ui.label_9.setPixmap(QPixmap.fromImage(image))
-        print('test_image_update_slot_3')
+        for i in range(len(image_list)):
+            label_list[i].setPixmap(QPixmap.fromImage(image_list[i]))
+
+        # if image_list[0]:
+        #     self.ui.label_1.setPixmap(QPixmap.fromImage(image_list[0]))
+        # if image_list[1]:
+        #     self.ui.label_2.setPixmap(QPixmap.fromImage(image_list[1]))
+        # if image_list[2]:
+        #     self.ui.label_3.setPixmap(QPixmap.fromImage(image_list[2]))
+        # if image_list[3]:
+        #     self.ui.label_4.setPixmap(QPixmap.fromImage(image_list[3]))
+        # if image_list[4]:
+        #     self.ui.label_5.setPixmap(QPixmap.fromImage(image_list[4]))
+        # if image_list[5]:
+        #     self.ui.label_6.setPixmap(QPixmap.fromImage(image_list[5]))
+        # if image_list[6]:
+        #     self.ui.label_7.setPixmap(QPixmap.fromImage(image_list[6]))
+        # if image_list[7]:
+        #     self.ui.label_8.setPixmap(QPixmap.fromImage(image_list[7]))
+        # if image_list[8]:
+        #     self.ui.label_9.setPixmap(QPixmap.fromImage(image_list[8]))
+
+        # self.ui.label_2.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_3.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_4.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_5.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_6.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_7.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_8.setPixmap(QPixmap.fromImage(image))
+        # self.ui.label_9.setPixmap(QPixmap.fromImage(image))
 
 
 class WorkerServer(QThread):
@@ -107,18 +111,27 @@ class WorkerServer(QThread):
 
         while self.thread_active:
             while True:
-                print('test')
-
                 # server = StreamServer(self.prototxt, self.model, 0.1, 2, 2)
-                print('test2')
                 self.server.stream()
-                print('test3')
-                print(type(self.server.frame_dict))
                 self.frame_dict_update.emit(self.server.frame_dict)
-                print('test4')
 
-                # FRAME_DICT = server.frame_dict
-                # queue.put(server.frame_dict)
+    def stop(self):
+        self.thread_active = False
+        self.quit()
+
+
+class WorkerClient(QThread):
+    def __init__(self, ip_client_addr):
+        super(WorkerClient, self).__init__()
+        self.thread_active = False
+        self.ip_addr = ip_client_addr
+
+    def run(self):
+        self.thread_active = True
+
+        while self.thread_active:
+            client = StreamClient(self.ip_addr)
+            client.stream()
 
     def stop(self):
         self.thread_active = False
@@ -170,6 +183,21 @@ class Worker(QThread):
 
 
 if __name__ == "__main__":
+    ip_addr_file = open("ip_addr.txt")
+    ip_addr = ip_addr_file.readline()
+    ip_addr_list = []
+
+    print("Cameras connected:\n")
+
+    while ip_addr:
+        print(ip_addr)
+        ip_addr_list.append(ip_addr)
+        ip_addr = ip_addr_file.readline()
+
+    for ip_addr in ip_addr_list:
+        worker_client = WorkerClient(ip_addr)
+        worker_client.start()
+
     app = QApplication(sys.argv)
     window = MainWindow()
     # ui = Ui_MainWindow()

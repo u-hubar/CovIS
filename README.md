@@ -13,3 +13,8 @@ Na początku trzeba uruchomić skrypt test_client.py
 Następnie main.py
 
     python main.py
+
+## Rozwijanie programu
+Stworzenie skryptu .py z pliku .ui
+
+    pyuic5 -x mainWindow.ui -o mainWindow.py
