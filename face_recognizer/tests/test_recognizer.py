@@ -1,7 +1,8 @@
+import pathlib
+
+import cv2
 from face_recognizer.recognizer import Recognizer
 from psycopg2.extras import DictCursor
-import pathlib
-import cv2
 
 
 class TestRecognizer:
