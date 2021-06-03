@@ -10,10 +10,6 @@ from streaming.client import StreamClient
 from streaming.server import StreamServer
 
 
-# queue = Queue()
-# FRAME_DICT = None
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -36,11 +32,11 @@ class MainWindow(QMainWindow):
         # self.thread2.start()
         # self.thread2.image_update.connect(self.image_update_slot)
 
-        self.ui.pushButton_1.clicked.connect(self.push_button_1_clicked)
+        # self.ui.pushButton_1.clicked.connect(self.push_button_1_clicked)
 
-    def push_button_1_clicked(self):
-        client = StreamClient("localhost")
-        client.stream()
+    # def push_button_1_clicked(self):
+    #     client = StreamClient("localhost")
+    #     client.stream()
 
     # def image_update_slot(self, image):
 
@@ -63,8 +59,8 @@ class MainWindow(QMainWindow):
                       self.ui.label_4, self.ui.label_5, self.ui.label_6,
                       self.ui.label_7, self.ui.label_8, self.ui.label_9]
 
-        for i in range(len(image_list)):
-            label_list[i].setPixmap(QPixmap.fromImage(image_list[i]))
+        for j in range(len(image_list)):
+            label_list[j].setPixmap(QPixmap.fromImage(image_list[j]))
 
         # if image_list[0]:
         #     self.ui.label_1.setPixmap(QPixmap.fromImage(image_list[0]))
@@ -121,17 +117,21 @@ class WorkerServer(QThread):
 
 
 class WorkerClient(QThread):
-    def __init__(self, ip_client_addr):
+    def __init__(self, server_ip, camera_ip):
         super(WorkerClient, self).__init__()
         self.thread_active = False
-        self.ip_addr = ip_client_addr
+        # self.server_ip = server_ip
+        # self.camera_ip = camera_ip
+        self.stream_client = StreamClient(server_ip, camera_ip)
 
     def run(self):
         self.thread_active = True
 
         while self.thread_active:
-            client = StreamClient(self.ip_addr)
-            client.stream()
+            # while True:
+            # client = StreamClient(self.server_ip, self.camera_ip)
+            # client.stream()
+            self.stream_client.stream()
 
     def stop(self):
         self.thread_active = False
@@ -143,28 +143,14 @@ class Worker(QThread):
 
     def __init__(self):
         super(Worker, self).__init__()
-        # threading.Thread.__init__(self)
         self.thread_active = False
 
     def run(self):
         self.thread_active = True
         capture = cv2.VideoCapture(0)
 
-        # server_ip = "localhost"
-        # capture = cv2.VideoCapture(f"tcp://{server_ip}:5555")
-
-        # server_ip = "localhost"
-        # stream_client = StreamClient(server_ip)
-        # stream_client.stream()
-        # capture = stream_client.vs
-
-        # capture = VideoStream().start()
-        # global FRAME_DICT
-        # print('test')
-
         while self.thread_active:
             while True:
-                # frame_dict = queue.get()
                 r, frame = capture.read()
                 print(frame.shape)
                 print("---")
@@ -183,25 +169,22 @@ class Worker(QThread):
 
 
 if __name__ == "__main__":
-    ip_addr_file = open("ip_addr.txt")
-    ip_addr = ip_addr_file.readline()
-    ip_addr_list = []
+    ip_address_file = open("ip_addr.txt")
+    ip_address_list = ip_address_file.read().splitlines()
 
     print("Cameras connected:\n")
+    print(ip_address_list)
 
-    while ip_addr:
-        print(ip_addr)
-        ip_addr_list.append(ip_addr)
-        ip_addr = ip_addr_file.readline()
+    worker_client_list = []
 
-    for ip_addr in ip_addr_list:
-        worker_client = WorkerClient(ip_addr)
-        worker_client.start()
+    for i in range(len(ip_address_list)):
+        worker_client_list.append(WorkerClient("localhost", ip_address_list[i]))
+        worker_client_list[i].start()
+
+    # worker_client_1 = WorkerClient("localhost", ip_address_list[0])
+    # worker_client_1.start()
 
     app = QApplication(sys.argv)
     window = MainWindow()
-    # ui = Ui_MainWindow()
-    # ui.setupUi(window)
-
     window.show()
     sys.exit(app.exec_())
