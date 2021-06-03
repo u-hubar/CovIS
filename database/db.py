@@ -14,6 +14,7 @@ logger = logging.getLogger("CovIS-Database")
 class CovisDB:
     def __init__(self):
         self.connection = self._connect()
+        self._register_caster()
 
     @use_cursor
     def select_person(self, person_id, cursor):
@@ -117,6 +118,13 @@ class CovisDB:
         psycopg2.extras.execute_values(
             cursor, insert_query, features
         )
+
+    def _register_caster(self):
+        DEC2FLOAT = psycopg2.extensions.new_type(
+            psycopg2.extensions.DECIMAL.values,
+            'DEC2FLOAT',
+            lambda value, curs: float(value) if value is not None else None)
+        psycopg2.extensions.register_type(DEC2FLOAT)
 
     def _connect(self):
         logger.info("Connecting to PG Database...")

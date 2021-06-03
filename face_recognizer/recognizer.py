@@ -23,15 +23,15 @@ class Recognizer(CovisDB):
         face_encodings_all = np.array(self.get_face_features())
 
         matches = face_recognition.compare_faces(
-            face_encodings_all[:, 3:], face_encoding[0]
+            face_encodings_all[:, 2:], face_encoding[0]
         )
         face_distances = face_recognition.face_distance(
-            face_encodings_all[:, 3:], face_encoding[0]
+            face_encodings_all[:, 2:], face_encoding[0]
         )
         best_match_index = np.argmin(face_distances)
 
         if matches[best_match_index]:
-            person_id = face_encodings_all[best_match_index]["idperson"]
+            person_id = face_encodings_all[best_match_index][1]
         else:
             person_info = (
                 False,  # isStudent
@@ -50,7 +50,9 @@ class Recognizer(CovisDB):
         return (person_id, person_permission)
 
     def _extract_features(self, img):
-        face_encodings = face_recognition.face_encodings(img)
+        face_encodings = np.array(
+            face_recognition.face_encodings(img)
+        )
 
         return face_encodings
 
