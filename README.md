@@ -1,19 +1,22 @@
-# Interfejs graficzny
+```
 
-## Instalacja wymaganych pakietów
-Będąc w głównym katalogu projektu uruchomić komendę
+ ██████╗ ██████╗ ██╗   ██╗██╗███████╗
+██╔════╝██╔═══██╗██║   ██║██║██╔════╝
+██║     ██║   ██║██║   ██║██║███████╗
+██║     ██║   ██║╚██╗ ██╔╝██║╚════██║
+╚██████╗╚██████╔╝ ╚████╔╝ ██║███████║
+ ╚═════╝ ╚═════╝   ╚═══╝  ╚═╝╚══════╝
+                                     
 
-    pip install -r requirements.txt
+```
+___
+# Main purpose
 
-## Uruchomienie programu
-Program należy uruchomić komendą:
+___
+# Description
 
-    python main.py
+___
+# Theory
 
-## Dodawanie kamer
-Aby dodać obraz z kamer należy wpisać linię z adresem IP do pliku ip_addr.txt
-
-## Rozwijanie programu
-Stworzenie skryptu .py z pliku .ui
-
-    pyuic5 -x mainWindow.ui -o mainWindow.py
+___
+# User guide
