@@ -79,6 +79,8 @@ class StreamServer:
         )
 
         self.frame_dict[cam_name] = frame
+        # print(len(self.frame_dict))
+        # print(self.frame_dict)
         # montages = imutils.build_montages(
         #     self.frame_dict.values(),
         #     (w, h),
