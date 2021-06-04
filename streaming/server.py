@@ -20,21 +20,16 @@ class StreamServer:
         self,
         prototxt,
         model,
-        confidence,
-        montage_width=4,
-        montage_height=2,
+        confidence=0.1
     ):
         self.model = cv2.dnn.readNetFromCaffe(prototxt, model)
         self.conf_threshold = confidence
-        self.montage_width = montage_width
-        self.montage_height = montage_height
         self.image_hub = imagezmq.ImageHub()
         self.frame_dict = {}
         self.last_active = {}
         self.last_active_check = datetime.now()
 
     def stream(self):
-        # while True:
         (cam_name, frame) = self.image_hub.recv_image()
         self.image_hub.send_reply(b"OK")
 
@@ -79,18 +74,6 @@ class StreamServer:
         )
 
         self.frame_dict[cam_name] = frame
-        # print(len(self.frame_dict))
-        # print(self.frame_dict)
-        # montages = imutils.build_montages(
-        #     self.frame_dict.values(),
-        #     (w, h),
-        #     (self.montage_width, self.montage_height),
-        # )
-        #
-        # for i, montage in enumerate(montages):
-        #     cv2.imshow("CovIS", montage)
-
-        key = cv2.waitKey(1) & 0xFF
 
         if (
             datetime.now() - self.last_active_check
@@ -104,9 +87,6 @@ class StreamServer:
                     self.frame_dict.pop(cam_name)
 
             self.last_active_check = datetime.now()
-
-        # if key == ord("q"):
-        #     break
 
     def _cleanup(self):
         cv2.destroyAllWindows()

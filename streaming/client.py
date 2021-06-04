@@ -1,14 +1,13 @@
-from imutils.video import VideoStream
-import imagezmq
-import socket
 import time
+
+import imagezmq
+from imutils.video import VideoStream
 
 
 class StreamClient:
     def __init__(self, server_ip, camera_ip):
         self.sender = imagezmq.ImageSender(connect_to=f"tcp://{server_ip}:5555")
         self.camera_ip = camera_ip
-        # self.cam_name = socket.gethostname()
         self.vs = self._start(camera_ip)
 
     def stream(self):

@@ -2,7 +2,7 @@ from streaming.client import StreamClient
 
 
 def main():
-    server_ip = "192.168.0.103"
+    server_ip = "localhost"
     client = StreamClient(server_ip)
     client.stream()
 
