@@ -23,7 +23,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setup_ui()
 
         self.client_workers = {}
-
         self.worker_server = WorkerServer()
         self.worker_server.start()
         self.worker_server.frame_dict_update.connect(self.image_update_slot)
@@ -62,6 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "grid_layout": {},
             "camera": {},
             "push_button": {},
+            "exit_button": {},
             "label": {},
         }
 
@@ -80,6 +80,14 @@ class MainWindow(QtWidgets.QMainWindow):
             push_button.clicked.connect(self.connect_camera)
             grid_layout.addWidget(push_button, 0, 1, 1, 1)
             self.cameras_ui["push_button"][camera_name] = push_button
+
+            exit_button = QtWidgets.QPushButton(self.grid_layout_widget)
+            exit_button.setObjectName(camera_name)
+            exit_button.setText("Disconnect")
+            exit_button.setStyleSheet("background-color : #a90000")
+            exit_button.clicked.connect(self.disconnect_camera)
+            grid_layout.addWidget(exit_button, 0, 2, 1, 1)
+            self.cameras_ui["exit_button"][camera_name] = exit_button
 
             row = (i // self.cameras_in_row) * 2
             col = i - self.cameras_in_row * (
@@ -107,11 +115,18 @@ class MainWindow(QtWidgets.QMainWindow):
         clicked_button = self.sender()
         camera_name = clicked_button.objectName()
 
-        client_worker = WorkerClient(
-            "localhost", self.cameras[camera_name]["IP"]
-        )
-        self.client_workers[camera_name] = client_worker
+        if camera_name not in self.client_workers.keys():
+            client_worker = WorkerClient(
+                "localhost", self.cameras[camera_name]["IP"]
+            )
+            self.client_workers[camera_name] = client_worker
         self.client_workers[camera_name].start()
+
+    def disconnect_camera(self):
+        clicked_button = self.sender()
+        camera_name = clicked_button.objectName()
+
+        self.client_workers[camera_name].stop()
 
     def image_update_slot(self, frame_dict):
         for cam_name, frame in frame_dict.items():
@@ -200,18 +215,6 @@ class App(QtWidgets.QApplication):
 
 
 def main(args):
-    # ip_address_file = open("ip_addr.txt")
-    # ip_address_list = ip_address_file.read().splitlines()
-
-    # print("Cameras connected:\n")
-    # print(ip_address_list)
-
-    # worker_client_list = []
-
-    # for i in range(len(ip_address_list)):
-    #     worker_client_list.append(WorkerClient("localhost", ip_address_list[i]))
-    #     worker_client_list[i].start()
-
     app = App(args)
     sys.exit(app.exec_())
 

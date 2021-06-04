@@ -14,8 +14,9 @@ WIDTH = 1800
 HEIGHT = 900
 
 # Cameras
+RECOGNITION_CAMERA = "192.168.0.102"
 CAMERAS = {
-    "192.168.0.102": {
+    RECOGNITION_CAMERA: {
         "ID": 1,
         "IP": "192.168.0.102"
     },

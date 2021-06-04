@@ -6,6 +6,7 @@ import cv2
 import imagezmq
 import imutils
 import numpy as np
+from face_recognizer.recognizer import Recognizer
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")
@@ -22,8 +23,9 @@ class StreamServer:
         model,
         confidence=0.1
     ):
-        self.model = cv2.dnn.readNetFromCaffe(prototxt, model)
+        self.face_detector = cv2.dnn.readNetFromCaffe(prototxt, model)
         self.conf_threshold = confidence
+        self.face_recognizer = Recognizer()
         self.image_hub = imagezmq.ImageHub()
         self.frame_dict = {}
         self.last_active = {}
@@ -47,8 +49,8 @@ class StreamServer:
             (104.0, 177.0, 123.0),
         )
 
-        self.model.setInput(blob)
-        detections = self.model.forward()
+        self.face_detector.setInput(blob)
+        detections = self.face_detector.forward()
 
         for i in range(len(detections)):
             confidence = detections[0, 0, i, 2]
