@@ -6,6 +6,7 @@ import cv2
 import imagezmq
 import imutils
 import numpy as np
+from face_recognizer.recognizer import Recognizer
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")
@@ -20,21 +21,17 @@ class StreamServer:
         self,
         prototxt,
         model,
-        confidence,
-        montage_width=4,
-        montage_height=2,
+        confidence=0.1
     ):
-        self.model = cv2.dnn.readNetFromCaffe(prototxt, model)
+        self.face_detector = cv2.dnn.readNetFromCaffe(prototxt, model)
         self.conf_threshold = confidence
-        self.montage_width = montage_width
-        self.montage_height = montage_height
+        self.face_recognizer = Recognizer()
         self.image_hub = imagezmq.ImageHub()
         self.frame_dict = {}
         self.last_active = {}
         self.last_active_check = datetime.now()
 
     def stream(self):
-        # while True:
         (cam_name, frame) = self.image_hub.recv_image()
         self.image_hub.send_reply(b"OK")
 
@@ -52,8 +49,8 @@ class StreamServer:
             (104.0, 177.0, 123.0),
         )
 
-        self.model.setInput(blob)
-        detections = self.model.forward()
+        self.face_detector.setInput(blob)
+        detections = self.face_detector.forward()
 
         for i in range(len(detections)):
             confidence = detections[0, 0, i, 2]
@@ -79,18 +76,6 @@ class StreamServer:
         )
 
         self.frame_dict[cam_name] = frame
-        # print(len(self.frame_dict))
-        # print(self.frame_dict)
-        # montages = imutils.build_montages(
-        #     self.frame_dict.values(),
-        #     (w, h),
-        #     (self.montage_width, self.montage_height),
-        # )
-        #
-        # for i, montage in enumerate(montages):
-        #     cv2.imshow("CovIS", montage)
-
-        key = cv2.waitKey(1) & 0xFF
 
         if (
             datetime.now() - self.last_active_check
@@ -104,9 +89,6 @@ class StreamServer:
                     self.frame_dict.pop(cam_name)
 
             self.last_active_check = datetime.now()
-
-        # if key == ord("q"):
-        #     break
 
     def _cleanup(self):
         cv2.destroyAllWindows()

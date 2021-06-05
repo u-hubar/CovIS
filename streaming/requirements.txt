@@ -1,4 +1,0 @@
-numpy
-imutils
-opencv-python
-imagezmq
