@@ -1,7 +1,7 @@
 import sys
 
 import cv2
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -10,6 +10,8 @@ from mainWindow import Ui_MainWindow
 from addCameraWindow import Ui_Dialog
 from streaming.client import StreamClient
 from streaming.server import StreamServer
+
+from utils import config
 
 
 class MainWindow(QMainWindow):
@@ -92,12 +94,12 @@ class AddCameraDialog(QDialog):
 class WorkerServer(QThread):
     frame_dict_update = pyqtSignal(dict)
 
-    def __init__(self):
+    def __init__(self, prototxt=config.FACE_DETECTION_PROTOTXT, model=config.FACE_DETECTION_MODEL):
         super(WorkerServer, self).__init__()
-        self.prototxt = "models/deploy.prototxt"
-        self.model = "models/res10_300x300_ssd_iter_140000.caffemodel"
+        self.prototxt = prototxt
+        self.model = model
         self.thread_active = False
-        self.server = StreamServer(self.prototxt, self.model, 0.1, 2, 2)
+        self.server = StreamServer(self.prototxt, self.model)
 
     def run(self):
         self.thread_active = True
@@ -129,11 +131,26 @@ class WorkerClient(QThread):
         self.quit()
 
 
-if __name__ == "__main__":
-    ip_address_file = open("ip_addr_saved.txt")
-    ip_address_list = ip_address_file.read().splitlines()
+class App(QtWidgets.QApplication):
+    def __init__(self, *args):
+        QtWidgets.QApplication.__init__(self, *args)
 
-    app = QApplication(sys.argv)
-    window = MainWindow(ip_address_list)
-    window.show()
+        ip_address_file = open("ip_addr_saved.txt")
+        ip_address_list = ip_address_file.read().splitlines()
+
+        self.main = MainWindow(ip_address_list)
+        self.main.show()
+
+
+def main(args):
+    # app = QApplication(args)
+    # window = MainWindow(ip_address_list)
+    # window.show()
+    # sys.exit(app.exec_())
+
+    app = App(args)
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main(sys.argv)
