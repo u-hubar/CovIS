@@ -1,17 +1,19 @@
 import sys
 
 import cv2
+from PyQt5 import QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from mainWindow import Ui_MainWindow
+from addCameraWindow import Ui_Dialog
 from streaming.client import StreamClient
 from streaming.server import StreamServer
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, camera_ip_addr_list):
         super(MainWindow, self).__init__()
 
         self.ui = Ui_MainWindow()
@@ -21,15 +23,31 @@ class MainWindow(QMainWindow):
         self.worker_server.start()
         self.worker_server.frame_dict_update.connect(self.image_update_slot)
 
-        # self.worker = Worker()
-        # self.worker.start()
-        # self.worker.image_update.connect(self.image_update_slot)
+        self.worker_client_dict = {}
+        self.camera_ip_addr_list = camera_ip_addr_list
 
-        # self.ui.pushButton_1.clicked.connect(self.push_button_1_clicked)
+        if self.camera_ip_addr_list:
+            for cammera_ip_addr in camera_ip_addr_list:
+                self.worker_client_dict[cammera_ip_addr] = WorkerClient("localhost", cammera_ip_addr)
+                self.worker_client_dict[cammera_ip_addr].start()
 
-    # def push_button_1_clicked(self):
-    #     client = StreamClient("localhost")
-    #     client.stream()
+        self.connect_buttons_list = [
+            self.ui.pushButton_1, self.ui.pushButton_2, self.ui.pushButton_3,
+            self.ui.pushButton_4, self.ui.pushButton_5, self.ui.pushButton_6,
+            self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
+        ]
+
+        for connect_button in self.connect_buttons_list:
+            connect_button.clicked.connect(self.connect_button_clicked)
+
+    def connect_button_clicked(self):
+        dialog = AddCameraDialog()
+        dialog.exec_()
+        dialog.show()
+        print(dialog.camera_ip)
+        self.camera_ip_addr_list.append(dialog.camera_ip)
+        self.worker_client_dict[dialog.camera_ip] = WorkerClient("localhost", dialog.camera_ip)
+        self.worker_client_dict[dialog.camera_ip].start()
 
     def image_update_slot(self, frame_dict):
         frame_dict_list = list(frame_dict.values())
@@ -47,6 +65,28 @@ class MainWindow(QMainWindow):
 
         for j in range(len(image_list)):
             label_list[j].setPixmap(QPixmap.fromImage(image_list[j]))
+
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        ip_addr_file = open("ip_addr_saved.txt", "w")
+
+        for cammera_ip_addr in self.camera_ip_addr_list[:-1]:
+            ip_addr_file.write(cammera_ip_addr + "\n")
+
+        ip_addr_file.write(self.camera_ip_addr_list[-1])
+
+
+class AddCameraDialog(QDialog):
+    def __init__(self):
+        super(AddCameraDialog, self).__init__()
+        self.camera_ip = ""
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+
+        self.ui.okPushButton.clicked.connect(self.ok_push_button_clicked)
+
+    def ok_push_button_clicked(self):
+        self.camera_ip = self.ui.ipLineEdit.text()
+        self.close()
 
 
 class WorkerServer(QThread):
@@ -82,7 +122,6 @@ class WorkerClient(QThread):
         self.thread_active = True
 
         while self.thread_active:
-            # while True:
             self.stream_client.stream()
 
     def stop(self):
@@ -90,53 +129,11 @@ class WorkerClient(QThread):
         self.quit()
 
 
-# class Worker(QThread):
-#     image_update = pyqtSignal(QImage)
-#
-#     def __init__(self):
-#         super(Worker, self).__init__()
-#         self.thread_active = False
-#
-#     def run(self):
-#         self.thread_active = True
-#         capture = cv2.VideoCapture(0)
-#
-#         while self.thread_active:
-#             while True:
-#                 r, frame = capture.read()
-#                 print(frame.shape)
-#                 print("---")
-#
-#                 if r:
-#                     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-#                     flipped_image = cv2.flip(image, 1)
-#                     convert_to_qt_format = QImage(flipped_image.data, flipped_image.shape[1], flipped_image.shape[0],
-#                                                   QImage.Format_RGB888)
-#                     picture = convert_to_qt_format.scaled(640, 480)
-#                     self.image_update.emit(picture)
-#
-#     def stop(self):
-#         self.thread_active = False
-#         self.quit()
-
-
 if __name__ == "__main__":
-    ip_address_file = open("ip_addr.txt")
+    ip_address_file = open("ip_addr_saved.txt")
     ip_address_list = ip_address_file.read().splitlines()
 
-    print("Cameras connected:\n")
-    print(ip_address_list)
-
-    worker_client_list = []
-
-    for i in range(len(ip_address_list)):
-        worker_client_list.append(WorkerClient("localhost", ip_address_list[i]))
-        worker_client_list[i].start()
-
-    # worker_client_1 = WorkerClient("localhost", ip_address_list[0])
-    # worker_client_1.start()
-
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(ip_address_list)
     window.show()
     sys.exit(app.exec_())
