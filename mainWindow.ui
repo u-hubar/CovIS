@@ -55,6 +55,13 @@
          </item>
          <item row="2" column="1">
           <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
+              <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="kamera_5">
              <property name="maximumSize">
@@ -68,10 +75,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_5">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_5">
              <property name="text">
-              <string>Połącz</string>
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -138,10 +145,24 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_3">
+             <property name="text">
+              <string>Rozłącz</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item row="0" column="1">
           <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="kamera_2">
              <property name="maximumSize">
@@ -155,10 +176,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_2">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_2">
              <property name="text">
-              <string>Połącz</string>
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -166,6 +187,13 @@
          </item>
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_1">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_1">
+             <property name="text">
+              <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="kamera_1">
              <property name="maximumSize">
@@ -179,10 +207,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_1">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_1">
              <property name="text">
-              <string>Połącz</string>
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -216,6 +244,13 @@
          </item>
          <item row="2" column="0">
           <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="kamera_4">
              <property name="maximumSize">
@@ -229,10 +264,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_4">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_4">
              <property name="text">
-              <string>Połącz</string>
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -257,6 +292,13 @@
             <widget class="QPushButton" name="pushButton_6">
              <property name="text">
               <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_6">
+             <property name="text">
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -303,6 +345,13 @@
          </item>
          <item row="4" column="0">
           <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_7">
+             <property name="text">
+              <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="kamera_7">
              <property name="maximumSize">
@@ -316,10 +365,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_7">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_7">
              <property name="text">
-              <string>Połącz</string>
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>
@@ -347,6 +396,13 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_8">
+             <property name="text">
+              <string>Rozłącz</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item row="4" column="2">
@@ -368,6 +424,13 @@
             <widget class="QPushButton" name="pushButton_9">
              <property name="text">
               <string>Połącz</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="disconnect_pushButton_9">
+             <property name="text">
+              <string>Rozłącz</string>
              </property>
             </widget>
            </item>

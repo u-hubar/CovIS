@@ -78,8 +78,7 @@ class StreamServer:
             2,
         )
 
-        frame = mask_recognition(self.mask_model, frame)
-
+        frame = mask_recognition(self.mask_model, frame[:, :, ::-1])
         self.frame_dict[cam_name] = frame
 
         if (

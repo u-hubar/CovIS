@@ -15,41 +15,99 @@ from my_utils import config
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, camera_ip_addr_list):
+    def __init__(self):
         super(MainWindow, self).__init__()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.connect_buttons_list = [
-            self.ui.pushButton_1, self.ui.pushButton_2, self.ui.pushButton_3,
-            self.ui.pushButton_4, self.ui.pushButton_5, self.ui.pushButton_6,
-            self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
-        ]
+        # self.connect_buttons_list = [
+        #     self.ui.pushButton_1, self.ui.pushButton_2, self.ui.pushButton_3,
+        #     self.ui.pushButton_4, self.ui.pushButton_5, self.ui.pushButton_6,
+        #     self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
+        # ]
 
-        for connect_button in self.connect_buttons_list:
-            connect_button.clicked.connect(self.connect_button_clicked)
+        self.connect_buttons_dict = {
+            1: self.ui.pushButton_1, 2: self.ui.pushButton_2, 3: self.ui.pushButton_3,
+            4: self.ui.pushButton_4, 5: self.ui.pushButton_5, 6: self.ui.pushButton_6,
+            7: self.ui.pushButton_7, 8: self.ui.pushButton_8, 9: self.ui.pushButton_9,
+        }
+
+        # self.disconnect_buttons_list = [
+        #     self.ui.disconnect_pushButton_1, self.ui.disconnect_pushButton_2,
+        #     self.ui.disconnect_pushButton_3, self.ui.disconnect_pushButton_4,
+        #     self.ui.disconnect_pushButton_5, self.ui.disconnect_pushButton_6,
+        #     self.ui.disconnect_pushButton_7, self.ui.disconnect_pushButton_8,
+        #     self.ui.disconnect_pushButton_9
+        # ]
+
+        self.disconnect_buttons_dict = {
+            1: self.ui.disconnect_pushButton_1, 2: self.ui.disconnect_pushButton_2,
+            3: self.ui.disconnect_pushButton_3, 4: self.ui.disconnect_pushButton_4,
+            5: self.ui.disconnect_pushButton_5, 6: self.ui.disconnect_pushButton_6,
+            7: self.ui.disconnect_pushButton_7, 8: self.ui.disconnect_pushButton_8,
+            9: self.ui.disconnect_pushButton_9
+        }
+
+        self.connect_buttons_dict[1].clicked.connect(lambda: self.connect_button_clicked(1))
+        self.connect_buttons_dict[2].clicked.connect(lambda: self.connect_button_clicked(2))
+        self.connect_buttons_dict[3].clicked.connect(lambda: self.connect_button_clicked(3))
+        self.connect_buttons_dict[4].clicked.connect(lambda: self.connect_button_clicked(4))
+        self.connect_buttons_dict[5].clicked.connect(lambda: self.connect_button_clicked(5))
+        self.connect_buttons_dict[6].clicked.connect(lambda: self.connect_button_clicked(6))
+        self.connect_buttons_dict[7].clicked.connect(lambda: self.connect_button_clicked(7))
+        self.connect_buttons_dict[8].clicked.connect(lambda: self.connect_button_clicked(8))
+        self.connect_buttons_dict[9].clicked.connect(lambda: self.connect_button_clicked(9))
+
+        self.disconnect_buttons_dict[1].clicked.connect(lambda: self.disconnect_button_clicked(1))
+        self.disconnect_buttons_dict[2].clicked.connect(lambda: self.disconnect_button_clicked(2))
+        self.disconnect_buttons_dict[3].clicked.connect(lambda: self.disconnect_button_clicked(3))
+        self.disconnect_buttons_dict[4].clicked.connect(lambda: self.disconnect_button_clicked(4))
+        self.disconnect_buttons_dict[5].clicked.connect(lambda: self.disconnect_button_clicked(5))
+        self.disconnect_buttons_dict[6].clicked.connect(lambda: self.disconnect_button_clicked(6))
+        self.disconnect_buttons_dict[7].clicked.connect(lambda: self.disconnect_button_clicked(7))
+        self.disconnect_buttons_dict[8].clicked.connect(lambda: self.disconnect_button_clicked(8))
+        self.disconnect_buttons_dict[9].clicked.connect(lambda: self.disconnect_button_clicked(9))
 
         self.worker_server = WorkerServer()
         self.worker_server.start()
         self.worker_server.frame_dict_update.connect(self.image_update_slot)
 
         self.worker_client_dict = {}
-        self.camera_ip_addr_list = camera_ip_addr_list
 
-        if self.camera_ip_addr_list:
-            for cammera_ip_addr in camera_ip_addr_list:
-                self.worker_client_dict[cammera_ip_addr] = WorkerClient("localhost", cammera_ip_addr)
-                self.worker_client_dict[cammera_ip_addr].start()
+        ip_address_file = open("ip_addr_saved.txt")
+        ip_address_list = ip_address_file.read().splitlines()
+        self.ip_address_dict = {}
+        i = 1
 
-    def connect_button_clicked(self):
+        for ip_address in ip_address_list:
+            self.ip_address_dict[i] = ip_address
+            i += 1
+
+        print(self.ip_address_dict)
+
+        if self.ip_address_dict:
+            for key, ip_address in self.ip_address_dict.items():
+                self.worker_client_dict[key] = \
+                    WorkerClient("localhost", self.ip_address_dict[key])
+                self.worker_client_dict[key].start()
+
+    def connect_button_clicked(self, button_id):
+        print(button_id)
         dialog = AddCameraDialog()
         dialog.exec_()
         dialog.show()
-        print(dialog.camera_ip)
-        self.camera_ip_addr_list.append(dialog.camera_ip)
-        self.worker_client_dict[dialog.camera_ip] = WorkerClient("localhost", dialog.camera_ip)
-        self.worker_client_dict[dialog.camera_ip].start()
+
+        if dialog.camera_ip:
+            print(dialog.camera_ip)
+            self.ip_address_dict[button_id] = dialog.camera_ip
+            self.worker_client_dict[button_id] = \
+                WorkerClient("localhost", self.ip_address_dict[button_id])
+            self.worker_client_dict[button_id].start()
+
+    def disconnect_button_clicked(self, button_id):
+        self.worker_client_dict[button_id].stop()
+        del self.ip_address_dict[button_id]
 
     def image_update_slot(self, frame_dict):
         frame_dict_list = list(frame_dict.values())
@@ -70,11 +128,10 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         ip_addr_file = open("ip_addr_saved.txt", "w")
+        ip_addr_list = [ip_addr for key, ip_addr in self.ip_address_dict.items()]
 
-        for cammera_ip_addr in self.camera_ip_addr_list[:-1]:
-            ip_addr_file.write(cammera_ip_addr + "\n")
-
-        ip_addr_file.write(self.camera_ip_addr_list[-1])
+        for ip_addr in ip_addr_list:
+            ip_addr_file.write(ip_addr + "\n")
 
 
 class AddCameraDialog(QDialog):
@@ -135,10 +192,10 @@ class App(QtWidgets.QApplication):
     def __init__(self, *args):
         QtWidgets.QApplication.__init__(self, *args)
 
-        ip_address_file = open("ip_addr_saved.txt")
-        ip_address_list = ip_address_file.read().splitlines()
+        # ip_address_file = open("ip_addr_saved.txt")
+        # ip_address_list = ip_address_file.read().splitlines()
 
-        self.main = MainWindow(ip_address_list)
+        self.main = MainWindow()
         self.main.show()
 
         # self.worker_client_dict = {}
