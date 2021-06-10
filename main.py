@@ -11,7 +11,7 @@ from addCameraWindow import Ui_Dialog
 from streaming.client import StreamClient
 from streaming.server import StreamServer
 
-from utils import config
+from my_utils import config
 
 
 class MainWindow(QMainWindow):
@@ -20,6 +20,15 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.connect_buttons_list = [
+            self.ui.pushButton_1, self.ui.pushButton_2, self.ui.pushButton_3,
+            self.ui.pushButton_4, self.ui.pushButton_5, self.ui.pushButton_6,
+            self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
+        ]
+
+        for connect_button in self.connect_buttons_list:
+            connect_button.clicked.connect(self.connect_button_clicked)
 
         self.worker_server = WorkerServer()
         self.worker_server.start()
@@ -32,15 +41,6 @@ class MainWindow(QMainWindow):
             for cammera_ip_addr in camera_ip_addr_list:
                 self.worker_client_dict[cammera_ip_addr] = WorkerClient("localhost", cammera_ip_addr)
                 self.worker_client_dict[cammera_ip_addr].start()
-
-        self.connect_buttons_list = [
-            self.ui.pushButton_1, self.ui.pushButton_2, self.ui.pushButton_3,
-            self.ui.pushButton_4, self.ui.pushButton_5, self.ui.pushButton_6,
-            self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
-        ]
-
-        for connect_button in self.connect_buttons_list:
-            connect_button.clicked.connect(self.connect_button_clicked)
 
     def connect_button_clicked(self):
         dialog = AddCameraDialog()
@@ -140,6 +140,14 @@ class App(QtWidgets.QApplication):
 
         self.main = MainWindow(ip_address_list)
         self.main.show()
+
+        # self.worker_client_dict = {}
+        # self.camera_ip_addr_list = ip_address_list
+        #
+        # if self.camera_ip_addr_list:
+        #     for cammera_ip_addr in ip_address_list:
+        #         self.worker_client_dict[cammera_ip_addr] = WorkerClient("localhost", cammera_ip_addr)
+        #         self.worker_client_dict[cammera_ip_addr].start()
 
 
 def main(args):

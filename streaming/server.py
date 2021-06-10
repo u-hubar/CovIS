@@ -7,6 +7,7 @@ import imagezmq
 import imutils
 import numpy as np
 from face_recognizer.recognizer import Recognizer
+from mask_recognizer.mask_recognizer import load_model, mask_recognition
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")
@@ -30,6 +31,8 @@ class StreamServer:
         self.frame_dict = {}
         self.last_active = {}
         self.last_active_check = datetime.now()
+
+        self.mask_model = load_model('models/best3.pt')
 
     def stream(self):
         (cam_name, frame) = self.image_hub.recv_image()
@@ -74,6 +77,8 @@ class StreamServer:
             (0, 0, 255),
             2,
         )
+
+        frame = mask_recognition(self.mask_model, frame)
 
         self.frame_dict[cam_name] = frame
 
