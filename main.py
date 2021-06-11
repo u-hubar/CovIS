@@ -27,6 +27,12 @@ class MainWindow(QMainWindow):
         #     self.ui.pushButton_7, self.ui.pushButton_8, self.ui.pushButton_9,
         # ]
 
+        # self.label_dict = {
+        #     1: self.ui.label_1, 2: self.ui.label_2, 3: self.ui.label_3,
+        #     4: self.ui.label_4, 5: self.ui.label_5, 6: self.ui.label_6,
+        #     7: self.ui.label_7, 8: self.ui.label_8, 9: self.ui.label_9,
+        # }
+
         self.connect_buttons_dict = {
             1: self.ui.pushButton_1, 2: self.ui.pushButton_2, 3: self.ui.pushButton_3,
             4: self.ui.pushButton_4, 5: self.ui.pushButton_5, 6: self.ui.pushButton_6,
@@ -106,8 +112,17 @@ class MainWindow(QMainWindow):
             self.worker_client_dict[button_id].start()
 
     def disconnect_button_clicked(self, button_id):
-        self.worker_client_dict[button_id].stop()
-        del self.ip_address_dict[button_id]
+        if button_id in self.worker_client_dict:
+            self.worker_client_dict[button_id].stop()
+            del self.worker_client_dict[button_id]
+            del self.ip_address_dict[button_id]
+
+            label_list = [self.ui.label_1, self.ui.label_2, self.ui.label_3,
+                          self.ui.label_4, self.ui.label_5, self.ui.label_6,
+                          self.ui.label_7, self.ui.label_8, self.ui.label_9]
+
+            for label in label_list:
+                label.clear()
 
     def image_update_slot(self, frame_dict):
         frame_dict_list = list(frame_dict.values())
@@ -174,6 +189,7 @@ class WorkerServer(QThread):
 class WorkerClient(QThread):
     def __init__(self, server_ip, camera_ip):
         super(WorkerClient, self).__init__()
+        self.camera_ip = camera_ip
         self.thread_active = False
         self.stream_client = StreamClient(server_ip, camera_ip)
 
@@ -181,10 +197,15 @@ class WorkerClient(QThread):
         self.thread_active = True
 
         while self.thread_active:
-            self.stream_client.stream()
+            ret = self.stream_client.stream()
+
+            if ret == 1:
+                print(f"Połączenie z {self.camera_ip} zostało zerwane")
+                self.thread_active = False
 
     def stop(self):
         self.thread_active = False
+        self.stream_client.stop_streaming()
         self.quit()
 
 

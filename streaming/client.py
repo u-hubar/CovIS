@@ -14,7 +14,14 @@ class StreamClient:
     def stream(self):
         while True:
             frame = self.vs.read()
-            self.sender.send_image(self.camera_ip, frame)
+
+            try:
+                self.sender.send_image(self.camera_ip, frame)
+            except AttributeError:
+                return 1
+
+    def stop_streaming(self):
+        self.vs.stop()
 
     def _start(self, camera_ip):
         vs = VideoStream(f"rtsp://{camera_ip}:554").start()
