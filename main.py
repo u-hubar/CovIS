@@ -117,12 +117,12 @@ class MainWindow(QMainWindow):
             del self.worker_client_dict[button_id]
             del self.ip_address_dict[button_id]
 
-            label_list = [self.ui.label_1, self.ui.label_2, self.ui.label_3,
-                          self.ui.label_4, self.ui.label_5, self.ui.label_6,
-                          self.ui.label_7, self.ui.label_8, self.ui.label_9]
-
-            for label in label_list:
-                label.clear()
+            # label_list = [self.ui.label_1, self.ui.label_2, self.ui.label_3,
+            #               self.ui.label_4, self.ui.label_5, self.ui.label_6,
+            #               self.ui.label_7, self.ui.label_8, self.ui.label_9]
+            #
+            # for label in label_list:
+            #     label.clear()
 
     def image_update_slot(self, frame_dict):
         frame_dict_list = list(frame_dict.values())
@@ -217,6 +217,23 @@ class App(QtWidgets.QApplication):
         # ip_address_list = ip_address_file.read().splitlines()
 
         self.main = MainWindow()
+
+        self.setStyle("Fusion")
+        palette = QtGui.QPalette()
+        palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+        palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(15, 15, 15))
+        palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
+        palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
+        palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
+        palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
+        palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
+        palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
+        palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
+        palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(142, 45, 197).lighter())
+        palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
+        self.setPalette(palette)
+
         self.main.show()
 
         # self.worker_client_dict = {}

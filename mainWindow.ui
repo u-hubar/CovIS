@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1800</width>
-    <height>900</height>
+    <width>1700</width>
+    <height>1000</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
-    <height>600</height>
+    <width>1000</width>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,413 +30,517 @@
        <attribute name="title">
         <string>Kamery</string>
        </attribute>
-       <widget class="QWidget" name="gridLayoutWidget">
+       <widget class="QScrollArea" name="scrollArea">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>13</y>
-          <width>1751</width>
-          <height>781</height>
+          <y>10</y>
+          <width>1651</width>
+          <height>901</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="3" column="1">
-          <widget class="QLabel" name="label_5">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <layout class="QGridLayout" name="gridLayout_5">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_5">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1649</width>
+           <height>899</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>1631</width>
+            <height>881</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="3" column="1">
+            <widget class="QLabel" name="label_5">
+             <property name="maximumSize">
+              <size>
+               <width>530</width>
+               <height>530</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Połącz</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_5">
+           <item row="2" column="1">
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
+             </property>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_5">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 5</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_5">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="label_8">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 5</string>
+              <string>Czekaj...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_6">
+             <property name="maximumSize">
+              <size>
+               <width>530</width>
+               <height>530</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
+             <property name="text">
+              <string>Czekaj...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="maximumSize">
+              <size>
+               <width>530</width>
+               <height>530</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
+             <property name="text">
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
            <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_5">
-             <property name="text">
-              <string>Rozłącz</string>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
              </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="label_8">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="label_6">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_7">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_3">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Kamera 3</string>
-             </property>
-            </widget>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_3">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_3">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Połącz</string>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
              </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_3">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_2">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Kamera 2</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_2">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_1">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_1">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_2">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_2">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="kamera_1">
+            <layout class="QGridLayout" name="gridLayout_1">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
+             </property>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_1">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_1">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_1">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_2">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 1</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_1">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_2">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_1">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_4">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_1">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 4</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_4">
-             <property name="text">
-              <string>Rozłącz</string>
+           <item row="2" column="0">
+            <layout class="QGridLayout" name="gridLayout_4">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
              </property>
-            </widget>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_4">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_4">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
-          </layout>
-         </item>
-         <item row="2" column="2">
-          <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_6">
+           <item row="2" column="2">
+            <layout class="QGridLayout" name="gridLayout_6">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_6">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 6</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_6">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_4">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 6</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_6">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_6">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="label_3">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QLabel" name="label_9">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="text">
-            <string>Czekaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_7">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_7">
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_3">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 7</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_7">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="4" column="1">
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_8">
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_9">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>40</height>
+               <width>530</width>
+               <height>530</height>
               </size>
              </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
              <property name="text">
-              <string>Kamera 8</string>
+              <string>Czekaj...</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_8">
-             <property name="text">
-              <string>Połącz</string>
+           <item row="4" column="0">
+            <layout class="QGridLayout" name="gridLayout_7">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
              </property>
-            </widget>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_7">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_7">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_7">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_8">
-             <property name="text">
-              <string>Rozłącz</string>
+           <item row="4" column="1">
+            <layout class="QGridLayout" name="gridLayout_8">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
              </property>
-            </widget>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_8">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 8</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_8">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="2">
+            <layout class="QGridLayout" name="gridLayout_9">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="kamera_9">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Kamera 9</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_9">
+               <property name="text">
+                <string>Połącz</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="disconnect_pushButton_9">
+               <property name="text">
+                <string>Rozłącz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
-         </item>
-         <item row="4" column="2">
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="0" column="0">
-            <widget class="QLabel" name="kamera_9">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Kamera 9</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_9">
-             <property name="text">
-              <string>Połącz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="disconnect_pushButton_9">
-             <property name="text">
-              <string>Rozłącz</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
+         </widget>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
