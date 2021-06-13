@@ -8,6 +8,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from streaming.client import StreamClient
 from streaming.server import StreamServer
 from utils import config
+import datetime
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")

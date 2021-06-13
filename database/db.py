@@ -140,3 +140,39 @@ class CovisDB:
         connection.autocommit = True
 
         return connection
+    
+
+    @use_cursor
+    def get_num_entrances(self, cursor):
+        select_query = """
+            SELECT COUNT(idperson), entertime
+            FROM CovIS.person
+            group by entertime
+        """
+
+        cursor.execute(select_query)
+
+        num_entrances = cursor.fetchall()
+        return num_entrances
+
+    @use_cursor
+    def insert_persons(self, idperson, entertime, cursor):
+        insert_query = """
+            INSERT INTO CovIS.Person (idperson,isstudent,isstaff,eligibletoenter, entertime, exittime)
+            VALUES (%s, True,False,False, %s, '23:20:20')
+        """
+        cursor.execute(insert_query, (idperson, entertime))
+
+
+    # @use_cursor
+    # def update_id(self,id,prev_id, cursor):
+    #     update_query = """
+    #         UPDATE CovIS.Person
+    #         SET idperson = %s
+    #         WHERE entertime= %s
+    #     """
+
+    #     cursor.execute(update_query, (id,prev_id))
+
+
+
