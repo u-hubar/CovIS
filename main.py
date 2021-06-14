@@ -1,13 +1,15 @@
 import logging
 import math
 import sys
+from time import sleep
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from streaming.client import StreamClient
 from streaming.server import StreamServer
-from utils import config
+from face_recognizer.recognizer import FaceRecognizer
+from utils_module import config
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")
@@ -16,6 +18,7 @@ logger = logging.getLogger("CovIS")
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(QtWidgets.QMainWindow, self).__init__()
+        self.face_recognizer = FaceRecognizer()
         self.win_width = config.WIDTH
         self.win_height = config.HEIGHT
         self.cameras = config.CAMERAS
@@ -63,31 +66,50 @@ class MainWindow(QtWidgets.QMainWindow):
             "push_button": {},
             "exit_button": {},
             "label": {},
+            "person_label": None
         }
 
-        for i, (camera_name, camera_info) in enumerate(self.cameras.items()):
+        for i, (camera_id, camera_info) in enumerate(self.cameras.items()):
             grid_layout = QtWidgets.QGridLayout()
 
             camera = QtWidgets.QLabel(self.grid_layout_widget)
-            camera.setText(camera_name)
+            camera.setText(camera_info["Name"])
             grid_layout.addWidget(camera, 0, 0, 1, 1)
-            self.cameras_ui["camera"][camera_name] = camera
+            self.cameras_ui["camera"][camera_info["IP"]] = camera
+
+            if i == 0:
+                person_info = QtWidgets.QLabel(self.grid_layout_widget)
+                grid_layout.addWidget(person_info, 0, 1, 1, 1)
+                self.cameras_ui["person_label"] = person_info
+
+                face_recognition_button = QtWidgets.QPushButton(self.grid_layout_widget)
+                face_recognition_button.setObjectName(camera_info["IP"])
+                face_recognition_button.setText("Recognize")
+                face_recognition_button.setStyleSheet("background-color: orange")
+                face_recognition_button.clicked.connect(self.recognize_person)
+                grid_layout.addWidget(face_recognition_button, 0, 3, 1, 1)
 
             push_button = QtWidgets.QPushButton(self.grid_layout_widget)
-            push_button.setObjectName(camera_name)
+            push_button.setObjectName(camera_info["IP"])
             push_button.setText("Connect")
             push_button.setStyleSheet("background-color : purple")
             push_button.clicked.connect(self.connect_camera)
-            grid_layout.addWidget(push_button, 0, 1, 1, 1)
-            self.cameras_ui["push_button"][camera_name] = push_button
+            if i != 0:
+                grid_layout.addWidget(push_button, 0, 1, 1, 1)
+            else:
+                grid_layout.addWidget(push_button, 0, 2, 1, 1)
+            self.cameras_ui["push_button"][camera_info["IP"]] = push_button
 
             exit_button = QtWidgets.QPushButton(self.grid_layout_widget)
-            exit_button.setObjectName(camera_name)
+            exit_button.setObjectName(camera_info["IP"])
             exit_button.setText("Disconnect")
             exit_button.setStyleSheet("background-color : #a90000")
             exit_button.clicked.connect(self.disconnect_camera)
-            grid_layout.addWidget(exit_button, 0, 2, 1, 1)
-            self.cameras_ui["exit_button"][camera_name] = exit_button
+            if i != 0:
+                grid_layout.addWidget(exit_button, 0, 2, 1, 1)
+            else:
+                grid_layout.addWidget(exit_button, 0, 4, 1, 1)
+            self.cameras_ui["exit_button"][camera_info["IP"]] = exit_button
 
             row = (i // self.cameras_in_row) * 2
             col = i - self.cameras_in_row * (
@@ -106,31 +128,46 @@ class MainWindow(QtWidgets.QMainWindow):
                 - 50,
             )
             self.grid_layout.addWidget(label, row + 1, col, 1, 1)
-            self.cameras_ui["label"][camera_name] = label
+            self.cameras_ui["label"][camera_info["IP"]] = label
 
             self.grid_layout.addLayout(grid_layout, row, col, 1, 1)
-            self.cameras_ui["grid_layout"][camera_name] = grid_layout
+            self.cameras_ui["grid_layout"][camera_info["IP"]] = grid_layout
+
+    def recognize_person(self):
+        clicked_button = self.sender()
+        camera_ip = clicked_button.objectName()
+
+        for face in self.worker_server.server.frame_dict[camera_ip]["faces"]:
+            person_id, permission = self.face_recognizer.recognize(face)
+            self.cameras_ui["person_label"].setText(f"Eligible to enter: {'True' if permission else 'False'}")
 
     def connect_camera(self):
         clicked_button = self.sender()
-        camera_name = clicked_button.objectName()
+        camera_ip = clicked_button.objectName()
 
-        if camera_name not in self.client_workers.keys():
+        if camera_ip not in self.client_workers.keys():
             client_worker = WorkerClient(
-                "localhost", self.cameras[camera_name]["IP"]
+                "localhost", camera_ip
             )
-            self.client_workers[camera_name] = client_worker
-        self.client_workers[camera_name].start()
+            self.client_workers[camera_ip] = client_worker
+        self.client_workers[camera_ip].start()
 
     def disconnect_camera(self):
         clicked_button = self.sender()
-        camera_name = clicked_button.objectName()
+        camera_ip = clicked_button.objectName()
 
-        self.client_workers[camera_name].stop()
+        if camera_ip in self.client_workers.keys():
+            self.client_workers[camera_ip].stop()
+            self.client_workers[camera_ip].stream_client.stop()
+            self.client_workers[camera_ip].stream_client.close()
+            sleep(0.5)
+            self.client_workers.pop(camera_ip)
+            self.worker_server.server.clean_frame(camera_ip)
+            self.cameras_ui["label"][camera_ip].clear()
 
     def image_update_slot(self, frame_dict):
-        for cam_name, frame in frame_dict.items():
-            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        for cam_name, cam_info in frame_dict.items():
+            image = cv2.cvtColor(cam_info["frame"], cv2.COLOR_BGR2RGB)
             convert_to_qt_format = QtGui.QImage(
                 image.data,
                 image.shape[1],
@@ -158,13 +195,15 @@ class WorkerServer(QtCore.QThread):
         self.model = model
         self.thread_active = False
         self.server = StreamServer(self.prototxt, self.model)
+        self.face_recognition = False
 
     def run(self):
         self.thread_active = True
 
         while self.thread_active:
-            self.server.stream()
+            self.server.stream(self.face_recognition)
             self.frame_dict_update.emit(self.server.frame_dict)
+            self.face_recognition = False
 
     def stop(self):
         self.thread_active = False

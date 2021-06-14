@@ -1,7 +1,7 @@
 import pathlib
 
 import cv2
-from face_recognizer.recognizer import Recognizer
+from face_recognizer.recognizer import FaceRecognizer
 from psycopg2.extras import DictCursor
 
 
@@ -11,7 +11,7 @@ class TestRecognizer:
             "CovIS.Person",
             "CovIS.FaceFeatures",
         ]
-        self.recognizer = Recognizer()
+        self.recognizer = FaceRecognizer()
         self._cleanup(self)
 
     def test_process_features(self):
@@ -20,8 +20,7 @@ class TestRecognizer:
             "CovIS.FaceFeatures"
         ]
 
-        image_path = pathlib.Path(__file__).parent / "data/ok1.jpg"
-        image = cv2.imread(str(image_path))
+        image = str(pathlib.Path(__file__).parent / "data/ok1.jpg")
 
         person = (
             True,  # isStudent
@@ -49,10 +48,8 @@ class TestRecognizer:
             "CovIS.FaceFeatures"
         ]
 
-        image1_path = pathlib.Path(__file__).parent / "data/ok1.jpg"
-        image2_path = pathlib.Path(__file__).parent / "data/ok2.jpg"
-        image1 = cv2.imread(str(image1_path))
-        image2 = cv2.imread(str(image2_path))
+        image1 = str(pathlib.Path(__file__).parent / "data/ok1.jpg")
+        image2 = str(pathlib.Path(__file__).parent / "data/ok2.jpg")
 
         person = (
             True,

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import logging
 import sys
 from datetime import datetime
@@ -6,7 +8,9 @@ import cv2
 import imagezmq
 import imutils
 import numpy as np
-from face_recognizer.recognizer import Recognizer
+from utils_module import config
+from face_recognizer.recognizer import FaceRecognizer
+from mask_recognizer.recognizer import MaskRecognizer
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS")
@@ -21,17 +25,18 @@ class StreamServer:
         self,
         prototxt,
         model,
-        confidence=0.1
+        confidence=0.6
     ):
         self.face_detector = cv2.dnn.readNetFromCaffe(prototxt, model)
         self.conf_threshold = confidence
-        self.face_recognizer = Recognizer()
+        self.face_recognizer = FaceRecognizer()
+        self.mask_recognizer = MaskRecognizer(config.MASK_REC_MODEL)
         self.image_hub = imagezmq.ImageHub()
         self.frame_dict = {}
         self.last_active = {}
         self.last_active_check = datetime.now()
 
-    def stream(self):
+    def stream(self, face_recognition=False):
         (cam_name, frame) = self.image_hub.recv_image()
         self.image_hub.send_reply(b"OK")
 
@@ -52,18 +57,16 @@ class StreamServer:
         self.face_detector.setInput(blob)
         detections = self.face_detector.forward()
 
+        if cam_name not in self.frame_dict.keys():
+            self.frame_dict[cam_name] = {}
+        self.frame_dict[cam_name]["faces"] = []
+
         for i in range(len(detections)):
             confidence = detections[0, 0, i, 2]
             if confidence > self.conf_threshold:
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (start_x, start_y, end_x, end_y) = box.astype("int")
-                cv2.rectangle(
-                    frame,
-                    (start_x, start_y),
-                    (end_x, end_y),
-                    (255, 0, 0),
-                    2,
-                )
+                self.frame_dict[cam_name]["faces"].append(frame[start_y: end_y, start_x: end_x])
 
         cv2.putText(
             frame,
@@ -75,7 +78,7 @@ class StreamServer:
             2,
         )
 
-        self.frame_dict[cam_name] = frame
+        self.frame_dict[cam_name]["frame"] = frame
 
         if (
             datetime.now() - self.last_active_check
@@ -90,5 +93,6 @@ class StreamServer:
 
             self.last_active_check = datetime.now()
 
-    def _cleanup(self):
-        cv2.destroyAllWindows()
+    def clean_frame(self, camera_ip):
+        self.last_active.pop(camera_ip)
+        self.frame_dict.pop(camera_ip)

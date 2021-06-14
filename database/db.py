@@ -4,8 +4,8 @@ import sys
 import psycopg2
 import psycopg2.extras
 
-from utils import config
-from utils.decorators import use_cursor
+from utils_module import config
+from utils_module.decorators import use_cursor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS-Database")

@@ -6,3 +6,5 @@ opencv-python
 PyQt5
 psycopg2-binary
 face_recognition
+torch
+torchvision

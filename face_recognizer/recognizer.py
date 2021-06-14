@@ -1,5 +1,6 @@
 import logging
 import sys
+import cv2
 
 import numpy as np
 from database.db import CovisDB
@@ -10,11 +11,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("CovIS-Recognizer")
 
 
-class Recognizer(CovisDB):
+class FaceRecognizer(CovisDB):
     def __init__(self):
         super().__init__()
 
     def process_features(self, person_id, img):
+        img = cv2.imread(img)
         face_encodings = self._extract_features(img)
         self._save_features(person_id, face_encodings)
 
@@ -46,6 +48,7 @@ class Recognizer(CovisDB):
             self.insert_face_features(face_encoding)
 
         person_permission = self.check_enter_permission(person_id)
+        person_id = int(person_id)
 
         return (person_id, person_permission)
 
